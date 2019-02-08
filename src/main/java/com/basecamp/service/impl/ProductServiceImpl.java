@@ -13,10 +13,10 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.Random;
+import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,6 +92,54 @@ public class ProductServiceImpl implements ProductService {
                 .name("ProductName")
                 .status("ProductStatus")
                 .build();
+    }
+
+    @Override
+    public void race(int countOfCockroaches) throws InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(countOfCockroaches);
+        for (int i = 1; i <= countOfCockroaches; i++) {
+            executorService.submit(new Cockroach("Cockroach #" + i));
+            Thread.sleep(5000);
+        }
+        executorService.shutdown();
+    }
+
+    private class Cockroach extends Thread {
+
+        private boolean isFinished = false;
+
+        private static final int FINISH = 11;
+
+        public Cockroach(String name) {
+            super(name);
+        }
+
+        @Override
+        public void run() {
+
+            for (int i = 0; i < FINISH; i++) {
+                try {
+
+                    Thread.sleep(1000);
+
+                    System.out.println(this.getName());
+
+                    if (i == 10) {
+
+                        System.out.println(Thread.currentThread().getName() + " is finished");
+
+                        isFinished = true;
+
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+
     }
 
 }

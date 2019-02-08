@@ -13,4 +13,5 @@ public interface ProductService {
 
     void stopProductExecutor();
 
+    void race(int countOfCockroaches) throws InterruptedException;
 }

@@ -48,8 +48,15 @@ public class ProductController {
     public ResponseEntity homework() {
 
 
-
         return ResponseEntity.ok().build();
+    }
+
+
+    @PutMapping(value = "/countOfCockroaches") // спрінг бут
+    public ResponseEntity handleProductInfo(@RequestParam Integer count) throws InterruptedException {
+        productService.race(count);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED).build();
     }
 
 }
